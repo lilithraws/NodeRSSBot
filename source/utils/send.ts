@@ -68,14 +68,20 @@ const send = async (
             }
         });
     } else {
-        const feedItems = toSend;
+        const feedItems = toSend.reverse();
         subscribers.map(async (subscribe) => {
             const userId = subscribe.user_id;
-            let text = `<b>${sanitize(feed.feed_title)}</b>`;
-            feedItems.forEach(function (item) {
-                text += `\n<a href="${item.link.trim()}">${sanitize(
-                    item.title
-                )}</a>`;
+            let text = `🔔 🔔 🔔 🔔`;
+            feedItems.forEach(function (item, index) {
+                if(index === 0) {
+                    text += `\n<b><a href="${item.link.trim()}">${sanitize(
+                        item.title
+                    )}</a></b>`;
+                }else {
+                    text += `\n🔔 🔔 🔔 🔔\n<b><a href="${item.link.trim()}">${sanitize(
+                        item.title
+                    )}</a></b>`;
+                }
             });
             try {
                 await bot.telegram.sendMessage(userId, text, {
