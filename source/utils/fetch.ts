@@ -28,10 +28,10 @@ import {
 import { encodeUrl } from './urlencode';
 const { notify_error_count, item_num, concurrency, fetch_gap } = config;
 
-function nextFetchTimeStr(minutes: number) {
+function nextFetchTimeStr(seconds: number) {
     // use SQLite CURRENT_TIMESTAMP return format like `2021-03-09 06:23:43`
     // It should use the UTC timezone
-    return new Date(Date.now() + minutes * 60 * 1000)
+    return new Date(Date.now() + (seconds - 1) * 1000)
         .toISOString()
         .split('.')[0]
         .replace('T', ' ');
@@ -85,7 +85,7 @@ async function fetch(feedModal: Feed): Promise<Option<any[]>> {
                 feed_id: feedModal.feed_id,
                 error_count: 0,
                 next_fetch_time: nextFetchTimeStr(
-                    feedModal.ttl || config['GAP_MINUTES']
+                    feedModal.ttl * 60 || config['GAP_SECONDS']
                 )
             };
             updateFeed(updatedFeedModal);
@@ -97,14 +97,14 @@ async function fetch(feedModal: Feed): Promise<Option<any[]>> {
         const text = await res.textConverted();
         const feed = await parseString(text);
         const items = feed.items;
-        const ttlMinutes =
+        const ttlSeconds =
             typeof feed.ttl === 'number' && !Number.isNaN(feed.ttl)
-                ? feed.ttl
-                : config['GAP_MINUTES'];
+                ? feed.ttl * 60
+                : config['GAP_SECONDS'];
         const updatedFeedModal: Partial<Feed> & { feed_id: number } = {
             feed_id: feedModal.feed_id,
             error_count: 0,
-            next_fetch_time: nextFetchTimeStr(ttlMinutes)
+            next_fetch_time: nextFetchTimeStr(ttlSeconds)
         };
         if (feed.title !== feedModal.feed_title) {
             updatedFeedModal.feed_title = feed.title;

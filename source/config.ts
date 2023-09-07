@@ -51,20 +51,23 @@ Object.defineProperty(config, 'PKG_ROOT', {
     value: PKGROOT
 });
 
-let GAP_MINUTES: number;
+let GAP_SECONDS: number;
 const { fetch_gap } = config;
 const gapNum = parseInt(fetch_gap.substring(0, fetch_gap.length - 1));
 const unit = fetch_gap[fetch_gap.length - 1];
 switch (unit) {
     case 'h':
-        GAP_MINUTES = gapNum * 60;
+        GAP_SECONDS = gapNum * 60 * 60;
         break;
     case 'm':
+        GAP_SECONDS = gapNum * 60;
+        break;
+    case 's':
     default:
-        GAP_MINUTES = gapNum;
+        GAP_SECONDS = gapNum;
 }
-Object.defineProperty(config, 'GAP_MINUTES', {
+Object.defineProperty(config, 'GAP_SECONDS', {
     enumerable: false,
     writable: false,
-    value: GAP_MINUTES
+    value: GAP_SECONDS
 });
