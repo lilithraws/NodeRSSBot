@@ -37,4 +37,4 @@ jobs:
                   context: .
                   platforms: linux/amd64,linux/arm64
                   push: false
-                  tags: fengkx/node_rssbot:${{steps.docker-tag.outputs.DOCKER_BRANCH_TAG}},fengkx/node_rssbot:${{steps.docker-tag.outputs.DOCKER_SHA_TAG}}
+                  tags: partment/node_rssbot:${{steps.docker-tag.outputs.DOCKER_BRANCH_TAG}},partment/node_rssbot:${{steps.docker-tag.outputs.DOCKER_SHA_TAG}}
